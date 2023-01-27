@@ -8,7 +8,13 @@ function Main_navbar() {
     <>
       <Navbar className="main_navbar" bg="transparent" variant="dark">
         <Container>
-          <Navbar.Brand href="#home">Star Carinae</Navbar.Brand>
+          <Navbar.Brand href="#home">
+            <img
+              src="logo_starCarinae.png"
+              alt=""
+              style={{ width: "50px", height: "50px" }}
+            />
+          </Navbar.Brand>
           <Nav className="me-auto">
             <Nav.Link href="#home">Home</Nav.Link>
             <Nav.Link href="#features">Features</Nav.Link>
