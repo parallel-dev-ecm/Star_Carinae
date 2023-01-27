@@ -3,18 +3,22 @@ import { Canvas, useThree } from "react-three-fiber";
 import Footer from "./Footer";
 import StarScene from "./Scene_one";
 import { data } from "./coordinateSystem";
+import { Row, Col, Container } from "react-bootstrap";
 
 function DashBoard() {
   return (
     <>
-      <div className="three_scene" style={{ width: "100%", height: "100vh" }}>
-        <Canvas>
-          <ambientLight intensity={0.5} />
-          <Suspense>
-            <StarScene />
-          </Suspense>
-        </Canvas>
-      </div>
+      <Container>
+        <div className="three_scene">
+          <Canvas>
+            <ambientLight intensity={0.5} />
+            <Suspense>
+              <StarScene />
+            </Suspense>
+          </Canvas>
+        </div>
+      </Container>
+
       <div className="footer"></div>
     </>
   );

@@ -100,11 +100,7 @@ function StarScene(props) {
 
           return (
             <>
-              <Star
-                url={`https://eta-carinae.s3.us-west-2.amazonaws.com/Comp+${i}.png`}
-                position={row_Vector}
-                scale={0.05}
-              />
+              <Star url={`STAR.png`} position={row_Vector} scale={0.05} />
               {i++}
             </>
           );
