@@ -5,8 +5,11 @@ import { data } from "./coordinateSystem";
 import * as THREE from "three";
 import { OrbitControls } from "@react-three/drei";
 import gsap from "gsap";
+import { Link, useNavigate } from "react-router-dom";
 
 function StarScene(props) {
+  const history = useNavigate();
+
   const target_vector = new THREE.Vector3();
   const group_ref = useRef();
   const SCALE = 150;
@@ -25,6 +28,7 @@ function StarScene(props) {
 
   renderer.setClearColor(0x0000000);
   camera.position.set(0, 0, -1);
+  console.log(camera.position);
 
   function LoadGTLF(props) {
     const { scene } = useGLTF(props.url);
@@ -58,21 +62,44 @@ function StarScene(props) {
       : console.log("no controls");
   };
 
-  function Search(name) {
-    console.log(orbit_controls);
-    data.find(({ name }) => name === "cherries");
-  }
+  const handleDoubleClick = (e) => {
+    const obj = e.object;
+    console.log(obj);
+    history("/modal", {
+      state: {
+        position: obj.position,
+        name: obj.userData.name,
+        id: obj.userData.id,
+        color: obj.userData.color,
+        starType: obj.userData.starType,
+      },
+    });
+  };
 
   function Star(props) {
     const texture = useTexture(props.url);
     return (
       <>
-        <sprite onClick={handleClick} {...props}>
+        <sprite
+          onDoubleClick={handleDoubleClick}
+          onClick={handleClick}
+          {...props}
+          userData={{
+            name: props.name,
+            id: props.unique_id,
+            color: props.color,
+            starType: props.starType,
+          }}
+        >
           <spriteMaterial map={texture} />
         </sprite>
       </>
     );
   }
+
+  const checkIdBelow100 = (id) => {
+    return id < 100 ? true : false;
+  };
 
   return (
     <>
@@ -96,11 +123,19 @@ function StarScene(props) {
           row_Vector.normalize();
           row_Vector.multiplyScalar(2);
 
-          console.log(row_Vector);
-
           return (
             <>
-              <Star url={`STAR.png`} position={row_Vector} scale={0.05} />
+              <Star
+                url={`STAR.png`}
+                position={row_Vector}
+                scale={0.05}
+                name={row.Name}
+                unique_id={
+                  checkIdBelow100(row.Id) ? "10" + row.Id : "1" + row.Id
+                }
+                color={row.Color}
+                starType={row.Star_type}
+              />
               {i++}
             </>
           );

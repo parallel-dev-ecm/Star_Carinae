@@ -4,6 +4,7 @@ import Footer from "./Footer";
 import StarScene from "./Scene_one";
 import { data } from "./coordinateSystem";
 import { Row, Col, Container } from "react-bootstrap";
+import { OrthographicCamera } from "@react-three/drei";
 
 function DashBoard() {
   return (
