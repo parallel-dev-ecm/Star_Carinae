@@ -1,4 +1,4 @@
-import React, { Suspense, useRef, useEffect } from "react";
+import React, { Suspense, useRef, useEffect, useState } from "react";
 import { Canvas, useThree } from "react-three-fiber";
 import Footer from "./Footer";
 import StarScene from "./Scene_one";

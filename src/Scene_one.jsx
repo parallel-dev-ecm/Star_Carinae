@@ -9,29 +9,33 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 function StarScene(props) {
+  // CONST AND VARIABLES DEFINITION
   const history = useNavigate();
-
-  const [objLookAt, setObjLookAt] = useState();
-
-  const [currentStarName, setCurrentStarName] = useState();
-
   const nameRef = useRef();
-  const target_vector = new THREE.Vector3();
   const group_ref = useRef();
-  const starScene = useRef(null);
+  const orbit_controls = useRef();
+  const target_vector = new THREE.Vector3();
 
-  const [enableRotate, setEnableRotate] = useState(true);
+  const [nameDiv, setNameDiv] = useState();
+  const [controls, setControls] = useState();
+  const [namePos, setNamePos] = useState([0, 0, 0]);
 
   const SCALE = 150;
   let i = 1000;
   const state = useThree();
   const camera = state.camera;
-  camera.position.set(0, 0, 0);
 
   const renderer = state.gl;
-  const orbit_controls = useRef();
+
+  // useEffect hook,
+  useEffect(() => {
+    setControls(orbit_controls.current);
+
+    return () => {};
+  }, []);
 
   renderer.setClearColor(0x0000000);
+  camera.position.set(0, 0, 0);
 
   function LoadGTLF(props) {
     const { scene } = useGLTF(props.url);
@@ -55,28 +59,28 @@ function StarScene(props) {
     let pos = new THREE.Vector3();
     obj.getWorldPosition(pos);
 
-    orbit_controls
-      ? gsap.to(orbit_controls.current.target, {
+    controls
+      ? gsap.to(controls.target, {
           x: pos.x,
           y: pos.y,
           z: pos.z,
         })
       : console.log("no controls");
-    setEnableRotate(false);
   };
 
   const onPointerEnter = (e) => {
     const obj = e.object;
-    const parent = obj.parent;
-    const text = parent.children[0];
-    text.visible = true;
+    let pos = new THREE.Vector3();
+    obj.getWorldPosition(pos);
+
+    setNameDiv(nameRef);
+    console.log(nameRef);
+
     gsap.to(obj.scale, { x: 0.09, y: 0.09, z: 0.09 });
   };
   const onPointerLeave = (e) => {
     const obj = e.object;
     const parent = obj.parent;
-    const text = parent.children[0];
-    text.visible = false;
     gsap.to(obj.scale, { x: 0.05, y: 0.05, z: 0.05 });
   };
 
@@ -134,10 +138,6 @@ function StarScene(props) {
         console.log("no_target")
       )}
 
-      <Html as="div" ref={nameRef}>
-        {console.log(nameRef.current)}
-      </Html>
-
       <group ref={group_ref}>
         {data.map((row) => {
           let x = parseFloat(row.x) * SCALE;
@@ -150,21 +150,28 @@ function StarScene(props) {
 
           return (
             <>
-              <group position={row_Vector}>
-                <Text
-                  occlude
-                  visible={false}
-                  color={"white"}
-                  scale={0.03}
-                  characters="ψγβχφπημνζδε"
-                  position={[
-                    row_Vector.x / SCALE,
-                    (row_Vector.y + 10) / SCALE,
-                    row_Vector.z / SCALE,
-                  ]}
+              <group name={"starAndName"} position={row_Vector}>
+                <Html
+                  portal={nameRef}
+                  scale={0.005}
+                  position={[0, -0.03, 0]}
+                  material={
+                    <meshPhysicalMaterial side={THREE.DoubleSide} opacity={1} />
+                  }
                 >
-                  {row.Name}
-                </Text>
+                  <p
+                    style={{
+                      color: "white",
+                      fontSize: "10px",
+                      width: "0",
+                      height: "0",
+                      opacity: 1,
+                    }}
+                  >
+                    {row.Name}
+                  </p>
+                </Html>
+
                 <Star
                   url={`STAR.png`}
                   scale={0.05}
