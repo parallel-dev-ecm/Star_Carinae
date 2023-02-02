@@ -1,34 +1,37 @@
-import { useTexture, useGLTF } from "@react-three/drei";
+import { useTexture, useGLTF, Html, Text } from "@react-three/drei";
 import React, { useEffect, useRef } from "react";
-import { useThree } from "react-three-fiber";
+import { useFrame, useThree } from "react-three-fiber";
 import { data } from "./coordinateSystem";
 import * as THREE from "three";
 import { OrbitControls } from "@react-three/drei";
 import gsap from "gsap";
 import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 function StarScene(props) {
   const history = useNavigate();
 
+  const [objLookAt, setObjLookAt] = useState();
+
+  const [currentStarName, setCurrentStarName] = useState();
+
+  const nameRef = useRef();
   const target_vector = new THREE.Vector3();
   const group_ref = useRef();
+  const starScene = useRef(null);
+
+  const [enableRotate, setEnableRotate] = useState(true);
+
   const SCALE = 150;
   let i = 1000;
   const state = useThree();
   const camera = state.camera;
-
-  useEffect(() => {
-    group_ref.current
-      ? gsap.to(group_ref.current.rotation, { y: "-=360", duration: 100000 })
-      : console.log("no group");
-  });
+  camera.position.set(0, 0, 0);
 
   const renderer = state.gl;
   const orbit_controls = useRef();
 
   renderer.setClearColor(0x0000000);
-  camera.position.set(0, 0, -1);
-  console.log(camera.position);
 
   function LoadGTLF(props) {
     const { scene } = useGLTF(props.url);
@@ -51,7 +54,6 @@ function StarScene(props) {
     const obj = e.object;
     let pos = new THREE.Vector3();
     obj.getWorldPosition(pos);
-    console.log(e.object);
 
     orbit_controls
       ? gsap.to(orbit_controls.current.target, {
@@ -60,6 +62,22 @@ function StarScene(props) {
           z: pos.z,
         })
       : console.log("no controls");
+    setEnableRotate(false);
+  };
+
+  const onPointerEnter = (e) => {
+    const obj = e.object;
+    const parent = obj.parent;
+    const text = parent.children[0];
+    text.visible = true;
+    gsap.to(obj.scale, { x: 0.09, y: 0.09, z: 0.09 });
+  };
+  const onPointerLeave = (e) => {
+    const obj = e.object;
+    const parent = obj.parent;
+    const text = parent.children[0];
+    text.visible = false;
+    gsap.to(obj.scale, { x: 0.05, y: 0.05, z: 0.05 });
   };
 
   const handleDoubleClick = (e) => {
@@ -82,6 +100,8 @@ function StarScene(props) {
       <>
         <sprite
           onDoubleClick={handleDoubleClick}
+          onPointerEnter={onPointerEnter}
+          onPointerLeave={onPointerLeave}
           onClick={handleClick}
           {...props}
           userData={{
@@ -108,10 +128,15 @@ function StarScene(props) {
           ref={orbit_controls}
           position={[0, 0, 0]}
           enableRotate={false}
+          enablePan={false}
         />
       ) : (
         console.log("no_target")
       )}
+
+      <Html as="div" ref={nameRef}>
+        {console.log(nameRef.current)}
+      </Html>
 
       <group ref={group_ref}>
         {data.map((row) => {
@@ -125,17 +150,33 @@ function StarScene(props) {
 
           return (
             <>
-              <Star
-                url={`STAR.png`}
-                position={row_Vector}
-                scale={0.05}
-                name={row.Name}
-                unique_id={
-                  checkIdBelow100(row.Id) ? "10" + row.Id : "1" + row.Id
-                }
-                color={row.Color}
-                starType={row.Star_type}
-              />
+              <group position={row_Vector}>
+                <Text
+                  occlude
+                  visible={false}
+                  color={"white"}
+                  scale={0.03}
+                  characters="ψγβχφπημνζδε"
+                  position={[
+                    row_Vector.x / SCALE,
+                    (row_Vector.y + 10) / SCALE,
+                    row_Vector.z / SCALE,
+                  ]}
+                >
+                  {row.Name}
+                </Text>
+                <Star
+                  url={`STAR.png`}
+                  scale={0.05}
+                  name={row.Name}
+                  unique_id={
+                    checkIdBelow100(row.Id) ? "10" + row.Id : "1" + row.Id
+                  }
+                  color={row.Color}
+                  starType={row.Star_type}
+                />
+              </group>
+
               {i++}
             </>
           );

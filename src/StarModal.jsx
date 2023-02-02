@@ -4,7 +4,9 @@ import Modal from "react-bootstrap/Modal";
 import { Card, Container } from "react-bootstrap";
 import { useState } from "react";
 
+
 function StarModal() {
+  const scale = 150;
   const hist = useNavigate();
   const location = useLocation();
   const [show, setShow] = useState(true);
@@ -14,6 +16,8 @@ function StarModal() {
   const checkIdBelow100 = (id) => {
     return id < 100 ? true : false;
   };
+
+  console.log(`https://eta-carinae.s3.us-west-2.amazonaws.com/Comp+${id}.png`);
 
   const handleExit = () => {
     hist("/");
@@ -30,11 +34,11 @@ function StarModal() {
           dialogClassName="modal-90w"
           aria-labelledby="example-custom-modal-styling-title"
         >
-          <Modal.Header closeButton className="close-icon-white">
+          <Modal.Header closeButton closeVariant="white">
             <Modal.Title id="Star_Modal_Title">{name}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Card border="0c" bg="light" style={{ width: "25rem" }}>
+            <Card bg="light" style={{ width: "25rem" }}>
               <Card.Img
                 variant="top"
                 src={`https://eta-carinae.s3.us-west-2.amazonaws.com/Comp+${id}.png`}
@@ -42,12 +46,10 @@ function StarModal() {
               />
               <Card.Body>
                 <Card.Title>
-                  {checkIdBelow100(id) ? "10" + id : "1" + id}
+                  {id} {position.x * scale} {position.y * scale}{" "}
+                  {position.z * scale}
                 </Card.Title>
-                <Card.Text>
-                  Some quick example text to build on the card title and make up
-                  the bulk of the card's content.
-                </Card.Text>
+                <Card.Text>{starType}</Card.Text>
               </Card.Body>
             </Card>
           </Modal.Body>
