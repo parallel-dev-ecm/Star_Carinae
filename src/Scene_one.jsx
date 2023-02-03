@@ -1,24 +1,25 @@
-import { useTexture, useGLTF, Html, Text } from "@react-three/drei";
+import { useTexture, useGLTF, Html } from "@react-three/drei";
 import React, { useEffect, useRef } from "react";
-import { useFrame, useThree } from "react-three-fiber";
+import { useThree } from "react-three-fiber";
 import { data } from "./coordinateSystem";
 import * as THREE from "three";
 import { OrbitControls } from "@react-three/drei";
 import gsap from "gsap";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 function StarScene(props) {
   // CONST AND VARIABLES DEFINITION
   const history = useNavigate();
-  const nameRef = useRef();
+
+  const nRef = useRef();
   const group_ref = useRef();
   const orbit_controls = useRef();
   const target_vector = new THREE.Vector3();
 
-  const [nameDiv, setNameDiv] = useState();
   const [controls, setControls] = useState();
-  const [namePos, setNamePos] = useState([0, 0, 0]);
+  const [currentName, setCurrentName] = useState();
+  const [divPosition, setDivPosition] = useState(new THREE.Vector3());
 
   const SCALE = 150;
   let i = 1000;
@@ -36,11 +37,6 @@ function StarScene(props) {
 
   renderer.setClearColor(0x0000000);
   camera.position.set(0, 0, 0);
-
-  function LoadGTLF(props) {
-    const { scene } = useGLTF(props.url);
-    return <primitive object={scene} {...props} />;
-  }
 
   function BG_scene() {
     const bg_texture = useTexture("bg.jpeg");
@@ -70,18 +66,28 @@ function StarScene(props) {
 
   const onPointerEnter = (e) => {
     const obj = e.object;
+
+    setCurrentName(obj.name);
+
+    console.log(obj);
+
     let pos = new THREE.Vector3();
     obj.getWorldPosition(pos);
-
-    setNameDiv(nameRef);
-    console.log(nameRef);
-
     gsap.to(obj.scale, { x: 0.09, y: 0.09, z: 0.09 });
+    nRef
+      ? gsap.to(nRef.current.style, { opacity: 1, scale: 1.2 })
+      : console.log("not mounted");
+
+    setDivPosition([pos.x, pos.y - 0.05, pos.z]);
   };
   const onPointerLeave = (e) => {
     const obj = e.object;
-    const parent = obj.parent;
+
     gsap.to(obj.scale, { x: 0.05, y: 0.05, z: 0.05 });
+    console.log("hello");
+    nRef
+      ? gsap.to(nRef.current.style, { opacity: 0, scale: 1 })
+      : console.log("not mounted");
   };
 
   const handleDoubleClick = (e) => {
@@ -104,8 +110,6 @@ function StarScene(props) {
       <>
         <sprite
           onDoubleClick={handleDoubleClick}
-          onPointerEnter={onPointerEnter}
-          onPointerLeave={onPointerLeave}
           onClick={handleClick}
           {...props}
           userData={{
@@ -121,6 +125,7 @@ function StarScene(props) {
     );
   }
 
+  // Fix coordinateSystem Id_values to match with AWS url id values.
   const checkIdBelow100 = (id) => {
     return id < 100 ? true : false;
   };
@@ -138,6 +143,24 @@ function StarScene(props) {
         console.log("no_target")
       )}
 
+      {/* HTML DIV STAR NAME CREATION */}
+      <Html scale={0.005} position={divPosition}>
+        <p
+          ref={nRef}
+          style={{
+            color: "white",
+            fontSize: "8px",
+            width: "0",
+            height: "0",
+            opacity: 0,
+          }}
+        >
+          {currentName}
+        </p>
+      </Html>
+
+      {/* STAR CREATION mapping coordinateSystem values */}
+
       <group ref={group_ref}>
         {data.map((row) => {
           let x = parseFloat(row.x) * SCALE;
@@ -150,28 +173,12 @@ function StarScene(props) {
 
           return (
             <>
-              <group name={"starAndName"} position={row_Vector}>
-                <Html
-                  portal={nameRef}
-                  scale={0.005}
-                  position={[0, -0.03, 0]}
-                  material={
-                    <meshPhysicalMaterial side={THREE.DoubleSide} opacity={1} />
-                  }
-                >
-                  <p
-                    style={{
-                      color: "white",
-                      fontSize: "10px",
-                      width: "0",
-                      height: "0",
-                      opacity: 1,
-                    }}
-                  >
-                    {row.Name}
-                  </p>
-                </Html>
-
+              <group
+                name={"starAndName"}
+                position={row_Vector}
+                onPointerLeave={onPointerLeave}
+                onPointerEnter={onPointerEnter}
+              >
                 <Star
                   url={`STAR.png`}
                   scale={0.05}
@@ -189,7 +196,6 @@ function StarScene(props) {
           );
         })}
       </group>
-      {/* <BG_scene /> */}
     </>
   );
 }
