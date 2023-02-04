@@ -1,7 +1,7 @@
 import { Children } from "react";
 import { motion } from "framer-motion";
 import { useStore } from "../store";
-
+import { Container } from "react-bootstrap";
 const container = {
   hidden: { opacity: 0, height: 0, transition: { staggerChildren: 0.05 } },
   show: {
@@ -35,6 +35,8 @@ function List({ children, open }) {
 export function Overlay(props) {
   const state = useStore();
   const pos = props.coords;
+
+  console.log(props.imgUrl);
   return (
     <>
       <div className="info">
@@ -43,17 +45,20 @@ export function Overlay(props) {
           <h3>
             <span className="accent">{props.starType}</span>
           </h3>
+          <Container>
+            <div className=" modalStarDiv">
+              <img
+                style={{ width: "53%", height: "30vh" }}
+                src={props.imgUrl}
+                alt=""
+              />
+            </div>
+          </Container>
+
           <div className="flex">
             <p className="coord">{pos.x}</p>
             <p className="coord">{pos.y}</p>
           </div>
-
-          <p>
-            Year after year Pegasus has proven itself on the feet of runners
-            everywhere. Now our most trusted style returns with new innovations
-            that make it more itself than ever. Meet the reliable, comfortable,
-            always ready-to-run Nike Air Zoom Pegasus.
-          </p>
         </List>
       </div>
     </>

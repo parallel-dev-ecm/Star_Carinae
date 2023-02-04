@@ -10,15 +10,13 @@ function StarModal(props) {
   const hist = useNavigate();
   const location = useLocation();
   const [show, setShow] = useState(true);
-  const { position, name, id, color, starType, url } = location.state || {};
-  console.log(id);
+  const { position, name, id, starType } = location.state || {};
 
   const checkIdBelow100 = (id) => {
     return id < 100 ? true : false;
   };
 
-  console.log(`https://eta-carinae.s3.us-west-2.amazonaws.com/Comp+${id}.png`);
-
+  const url = `https://eta-carinae.s3.us-west-2.amazonaws.com/Comp+${id}.png`;
   const handleExit = () => {
     hist("/");
   };
@@ -38,7 +36,12 @@ function StarModal(props) {
         </Modal.Header>
         <Modal.Body>
           <Container>
-            <Overlay name={name} starType={starType} coords={position} />
+            <Overlay
+              name={name}
+              starType={starType}
+              coords={position}
+              imgUrl={url}
+            />
           </Container>
         </Modal.Body>
       </Modal>

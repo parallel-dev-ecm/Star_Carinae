@@ -7,11 +7,13 @@ import { OrbitControls } from "@react-three/drei";
 import gsap from "gsap";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useStore } from "./store";
 
 function StarScene(props) {
   // CONST AND VARIABLES DEFINITION
   const history = useNavigate();
-
+  const globalState = useStore();
+  console.log(globalState);
   const nRef = useRef();
   const group_ref = useRef();
   const orbit_controls = useRef();
