@@ -66,6 +66,7 @@ function StarScene(props) {
 
   const onPointerEnter = (e) => {
     const obj = e.object;
+    nRef ? (nRef.current.style.opacity = 1) : console.log("no name ref yet");
 
     setCurrentName(obj.name);
 
@@ -74,28 +75,26 @@ function StarScene(props) {
     let pos = new THREE.Vector3();
     obj.getWorldPosition(pos);
     gsap.to(obj.scale, { x: 0.09, y: 0.09, z: 0.09 });
-    nRef
-      ? gsap.to(nRef.current.style, { opacity: 1, scale: 1.2 })
-      : console.log("not mounted");
 
     setDivPosition([pos.x, pos.y - 0.05, pos.z]);
   };
-  const onPointerLeave = (e) => {
-    const obj = e.object;
+  // const onPointerLeave = (e) => {
+  //   nRef.current.style.opacity = 0;
 
-    gsap.to(obj.scale, { x: 0.05, y: 0.05, z: 0.05 });
-    console.log("hello");
-    nRef
-      ? gsap.to(nRef.current.style, { opacity: 0, scale: 1 })
-      : console.log("not mounted");
-  };
+  //   const obj = e.object;
+
+  //   gsap.to(obj.scale, { x: 0.05, y: 0.05, z: 0.05 });
+  // };
 
   const handleDoubleClick = (e) => {
     const obj = e.object;
+    const pos = new THREE.Vector3();
+    obj.getWorldPosition(pos);
+    pos.multiplyScalar(SCALE);
     console.log(obj);
     history("/modal", {
       state: {
-        position: obj.position,
+        position: pos,
         name: obj.userData.name,
         id: obj.userData.id,
         color: obj.userData.color,
@@ -176,11 +175,10 @@ function StarScene(props) {
               <group
                 name={"starAndName"}
                 position={row_Vector}
-                onPointerLeave={onPointerLeave}
                 onPointerEnter={onPointerEnter}
               >
                 <Star
-                  url={`STAR.png`}
+                  url={"STAR.png"}
                   scale={0.05}
                   name={row.Name}
                   unique_id={

@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Main_navbar from "./Components/Main_navbar";
 import DashBoard from "./DashBoard";
 import StarModal from "./StarModal";
+import { Overlay } from "./Components/Overlay";
 
 function App() {
   return (
