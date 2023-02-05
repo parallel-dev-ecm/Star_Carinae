@@ -1,6 +1,6 @@
 import { Children } from "react";
 import { motion } from "framer-motion";
-import { Container } from "react-bootstrap";
+import { Container, Row, Col, Image } from "react-bootstrap";
 const container = {
   hidden: { opacity: 0, height: 0, transition: { staggerChildren: 0.05 } },
   show: {
@@ -37,38 +37,62 @@ export function Overlay(props) {
 
   return (
     <>
-      <Container className="d-flex flex-column ">
-        <div className="info">
-          <List open={open}>
-            <h3>{props.name}</h3>
-            <h3>
-              <span className="accent">{props.starType}</span>
-            </h3>
+      <div className="info">
+        <List open={open}>
+          <Container className="d-flex flex-column ">
+            <Row>
+              <Col>
+                <h3>{props.name}</h3>
+              </Col>
+            </Row>
+            <Row>
+              <Col className="d-none d-md-flex">
+                <h3>
+                  <span className="accent">{props.starType}</span>
+                </h3>
+              </Col>
+            </Row>
             <br />
-            <div class="d-flex justify-content-evenly">
-              <p className="coord">x: {pos.x}</p>
-              <p className="coord">y: {pos.y}</p>
-              <p className="coord">z: {pos.z}</p>
-            </div>
-            <div className="d-flex justify-content-center">
-              <img
-                style={{
-                  width: "35%",
-                  height: "35vh",
-                }}
-                src={props.imgUrl}
-                alt=""
-              />
-            </div>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad
-              perspiciatis dolorem quos cumque fugit! Explicabo mollitia vero,
-              dignissimos commodi quas nam voluptatem sapiente laborum soluta
-              possimus? Tempora recusandae vero totam.
-            </p>
-          </List>
-        </div>
-      </Container>
+            <Row className="d-flex justify-content-evenly">
+              <Col sm={1}>
+                <p className="coord">x: {pos.x}</p>
+              </Col>
+              <Col sm={1}>
+                <p className="coord">y: {pos.y}</p>
+              </Col>
+              <Col sm={1}>
+                <p className="coord">z: {pos.z}</p>
+              </Col>
+            </Row>
+
+            <Row>
+              <Col className="d-flex justify-content-center">
+                <Image
+                  style={{ width: "30%", padding: 0, margin: 0 }}
+                  src={props.imgUrl}
+                  alt=""
+                  fluid
+                />
+              </Col>
+            </Row>
+
+            <br />
+            <Row>
+              <Col md="auto">
+                <p
+                  className="text-justify d-none  d-sm-flex align-items-start justify-content-start "
+                  style={{ width: "100%" }}
+                >
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad
+                  perspiciatis dolorem quos cumque fugit! Explicabo mollitia
+                  vero, dignissimos commodi quas nam voluptatem sapiente laborum
+                  soluta possimus? Tempora recusandae vero totam.
+                </p>
+              </Col>
+            </Row>
+          </Container>
+        </List>
+      </div>
     </>
   );
 }

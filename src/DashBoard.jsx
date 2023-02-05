@@ -10,7 +10,10 @@ function DashBoard() {
     <>
       <Main_navbar />
       <div className="three_scene">
-        <Canvas orthographic camera={{ zoom: 450, position: [0, 0, 0] }}>
+        <Canvas
+          orthographic
+          camera={{ zoom: 450, near: 0, far: 1000, position: [0, 0, 0] }}
+        >
           <ambientLight intensity={0.5} />
           <Suspense>
             <StarScene />

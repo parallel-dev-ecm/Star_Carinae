@@ -1,4 +1,9 @@
-import { useTexture, useGLTF, Html } from "@react-three/drei";
+import {
+  useTexture,
+  useGLTF,
+  Html,
+  PresentationControls,
+} from "@react-three/drei";
 import React, { useEffect, useRef } from "react";
 import { useThree } from "react-three-fiber";
 import { data } from "./coordinateSystem";
@@ -31,20 +36,31 @@ function StarScene(props) {
   useEffect(() => {
     setControls(orbit_controls.current);
     console.log(group_ref.current);
-    gsap.fromTo(
-      group_ref.current.scale,
-      { x: 0, y: 0, z: 0 },
-      { x: 1, y: 1, z: 1, delay: 0.5, duration: 1.5 }
-    );
+
+    const ctx = gsap.context(() => {
+      const groupScaleInitialAnimation = gsap.fromTo(
+        group_ref.current.scale,
+        { x: 0, y: 0, z: 0 },
+        {
+          x: 1,
+          y: 1,
+          z: 1,
+          delay: 0.5,
+          duration: 1.5,
+          ease: "slow(0.7, 0.7, false)",
+        }
+      );
+    }, group_ref);
 
     // child.children[0].length > 0
     //   ? gsap.fromTo(child.children[0], { scale: 0 }, { scale: 1, delay: 4 })
     //   : console.log("no child");
-    return () => {};
+    return () => {
+      ctx.revert();
+    };
   }, []);
 
   renderer.setClearColor(0x0000000);
-  camera.position.set(0, 0, 0);
 
   function BG_scene() {
     const bg_texture = useTexture("bg.jpeg");
@@ -66,10 +82,7 @@ function StarScene(props) {
     setCurrentName(obj.name);
 
     setDivPosition([pos.x, pos.y - 0.05, pos.z]);
-    console.log(pos);
-    console.log(divPosition);
     nRef ? (nRef.current.style.opacity = 1) : console.log("no name ref yet");
-    gsap.to(controls.target, pos);
   };
 
   const handleDoubleClick = (e) => {
@@ -89,6 +102,11 @@ function StarScene(props) {
     });
   };
 
+  const handleExit = (e) => {
+    console.log(nRef.current);
+    nRef.current.style.opacity = 0;
+  };
+
   function Star(props) {
     const texture = useTexture(props.url);
     return (
@@ -96,6 +114,7 @@ function StarScene(props) {
         <sprite
           onDoubleClick={handleDoubleClick}
           onClick={handleClick}
+          onPointerLeave={handleExit}
           {...props}
           userData={{
             name: props.name,
@@ -104,7 +123,7 @@ function StarScene(props) {
             starType: props.starType,
           }}
         >
-          <spriteMaterial map={texture} />
+          <spriteMaterial map={texture} side={THREE.DoubleSide} />
         </sprite>
       </>
     );
@@ -117,14 +136,50 @@ function StarScene(props) {
 
   return (
     <>
-      <Html position={[0, 0, 0]}></Html>
       {target_vector ? (
-        <OrbitControls
-          ref={orbit_controls}
-          position={[0, 0, 0]}
-          enableRotate={true}
-          enablePan={false}
-        />
+        <PresentationControls
+          domElement={orbit_controls}
+          enabled={true} // the controls can be disabled by setting this to false
+          global={false} // Spin globally or by dragging the model
+          cursor={true} // Whether to toggle cursor style on drag
+          snap={false} // Snap-back to center (can also be a spring config)
+          speed={0.5} // Speed factor
+          zoom={1} // Zoom factor when half the polar-max is reached
+          rotation={[0, 0, 0]} // Default rotation
+          azimuth={[-Infinity, Infinity]} // Horizontal limits
+          config={{ mass: 1, tension: 170, friction: 26 }} // Spring config
+        >
+          <OrbitControls minZoom={300} />
+          <group ref={group_ref}>
+            {data.map((row) => {
+              let x = parseFloat(row.x) * SCALE;
+              let y = parseFloat(row.y) * SCALE;
+              let z = parseFloat(row.z) * SCALE;
+
+              const row_Vector = new THREE.Vector3(x, y, z);
+              row_Vector.normalize();
+              row_Vector.multiplyScalar(2);
+
+              return (
+                <>
+                  <Star
+                    url={"STAR.png"}
+                    position={row_Vector}
+                    scale={0.05}
+                    name={row.Name}
+                    unique_id={
+                      checkIdBelow100(row.Id) ? "10" + row.Id : "1" + row.Id
+                    }
+                    color={row.Color}
+                    starType={row.Star_type}
+                  />
+
+                  {i++}
+                </>
+              );
+            })}
+          </group>
+        </PresentationControls>
       ) : (
         console.log("no_target")
       )}
@@ -135,9 +190,11 @@ function StarScene(props) {
           ref={nRef}
           style={{
             color: "white",
-            fontSize: "8px",
+            fontSize: "1em",
             width: "0",
             height: "0",
+            lineHeight: " 1.25em",
+            marginBottom: "0.2em",
             opacity: 0,
           }}
         >
@@ -146,36 +203,6 @@ function StarScene(props) {
       </Html>
 
       {/* STAR CREATION mapping coordinateSystem values */}
-
-      <group ref={group_ref}>
-        {data.map((row) => {
-          let x = parseFloat(row.x) * SCALE;
-          let y = parseFloat(row.y) * SCALE;
-          let z = parseFloat(row.z) * SCALE;
-
-          const row_Vector = new THREE.Vector3(x, y, z);
-          row_Vector.normalize();
-          row_Vector.multiplyScalar(2);
-
-          return (
-            <>
-              <Star
-                url={"STAR.png"}
-                position={row_Vector}
-                scale={0.05}
-                name={row.Name}
-                unique_id={
-                  checkIdBelow100(row.Id) ? "10" + row.Id : "1" + row.Id
-                }
-                color={row.Color}
-                starType={row.Star_type}
-              />
-
-              {i++}
-            </>
-          );
-        })}
-      </group>
     </>
   );
 }
