@@ -7,13 +7,10 @@ import { OrbitControls } from "@react-three/drei";
 import gsap from "gsap";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { useStore } from "./store";
 
 function StarScene(props) {
   // CONST AND VARIABLES DEFINITION
   const history = useNavigate();
-  const globalState = useStore();
-  console.log(globalState);
   const nRef = useRef();
   const group_ref = useRef();
   const orbit_controls = useRef();
@@ -33,9 +30,8 @@ function StarScene(props) {
   // useEffect hook,
   useEffect(() => {
     setControls(orbit_controls.current);
-
     return () => {};
-  }, [orbit_controls]);
+  });
 
   renderer.setClearColor(0x0000000);
   camera.position.set(0, 0, 0);
@@ -56,28 +52,12 @@ function StarScene(props) {
     const obj = e.object;
     let pos = new THREE.Vector3();
     obj.getWorldPosition(pos);
+
     setCurrentName(obj.name);
-    console.log(obj);
 
     setDivPosition([pos.x, pos.y - 0.05, pos.z]);
     nRef ? (nRef.current.style.opacity = 1) : console.log("no name ref yet");
-    controls
-      ? gsap.to(controls.target, {
-          x: pos.x,
-          y: pos.y,
-          z: pos.z,
-        })
-      : console.log("no controls");
-  };
-
-  const onPointerEnter = (e) => {
-    const obj = e.object;
-
-    let pos = new THREE.Vector3();
-    obj.getWorldPosition(pos);
-
-    setDivPosition([pos.x, pos.y - 0.05, pos.z]);
-    nRef ? (nRef.current.style.opacity = 1) : console.log("no name ref yet");
+    gsap.to(controls.target, pos);
   };
 
   const handleDoubleClick = (e) => {
@@ -125,11 +105,12 @@ function StarScene(props) {
 
   return (
     <>
+      <Html position={[0, 0, 0]}></Html>
       {target_vector ? (
         <OrbitControls
           ref={orbit_controls}
           position={[0, 0, 0]}
-          enableRotate={false}
+          enableRotate={true}
           enablePan={false}
         />
       ) : (

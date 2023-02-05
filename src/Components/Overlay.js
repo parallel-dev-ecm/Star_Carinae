@@ -1,6 +1,5 @@
 import { Children } from "react";
 import { motion } from "framer-motion";
-import { useStore } from "../store";
 import { Container } from "react-bootstrap";
 const container = {
   hidden: { opacity: 0, height: 0, transition: { staggerChildren: 0.05 } },
@@ -33,15 +32,14 @@ function List({ children, open }) {
 }
 
 export function Overlay(props) {
-  const state = useStore();
+  const open = true;
   const pos = props.coords;
 
-  console.log(props.imgUrl);
   return (
     <>
-      <div className="info">
-        <List open={state.open}>
-          <Container className="d-flex flex-column ">
+      <Container className="d-flex flex-column ">
+        <div className="info">
+          <List open={open}>
             <h3>{props.name}</h3>
             <h3>
               <span className="accent">{props.starType}</span>
@@ -55,8 +53,8 @@ export function Overlay(props) {
             <div className="d-flex justify-content-center">
               <img
                 style={{
-                  width: "45%",
-                  height: "40vh",
+                  width: "35%",
+                  height: "35vh",
                 }}
                 src={props.imgUrl}
                 alt=""
@@ -68,9 +66,9 @@ export function Overlay(props) {
               dignissimos commodi quas nam voluptatem sapiente laborum soluta
               possimus? Tempora recusandae vero totam.
             </p>
-          </Container>
-        </List>
-      </div>
+          </List>
+        </div>
+      </Container>
     </>
   );
 }
