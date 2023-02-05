@@ -52,6 +52,14 @@ export function Overlay(props) {
                 </h3>
               </Col>
             </Row>
+            <br className="d-sm-none" />
+            <Row>
+              <Col className="d-sm-none">
+                <h5 style={{ fontSize: "1em" }}>
+                  <span className="a">{props.starType}</span>
+                </h5>
+              </Col>
+            </Row>
             <br />
             <Row className="d-flex justify-content-evenly">
               <Col sm={1}>
@@ -88,7 +96,7 @@ export function Overlay(props) {
             <Row>
               <Col>
                 <p
-                  className="text-justify d-none  d-md-flex  justify-content-center "
+                  className="d-md-flex text-align-justify "
                   style={{ width: "100%" }}
                 >
                   Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad
@@ -100,7 +108,7 @@ export function Overlay(props) {
             </Row>
             <Row className="text-justify text-align-justify">
               <Col className="text-justify d-sm-none justtify-content-start">
-                <p className="text-justify" style={{ width: "30%" }}>
+                <p style={{ width: "35%", textAlign: "justify" }}>
                   Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad
                   perspiciatis dolorem quos cumque fugit! Explicabo mollitia
                   vero, dignissimos commodi quas nam voluptatem sapiente laborum
