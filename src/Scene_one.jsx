@@ -19,7 +19,11 @@ function StarScene(props) {
   const nRef = useRef();
   const group_ref = useRef();
   const orbit_controls = useRef();
+  let orbitControls;
+
   const target_vector = new THREE.Vector3();
+
+  const [target, setTargent] = useState([0, 0, 0]);
 
   const [controls, setControls] = useState();
   const [currentName, setCurrentName] = useState();
@@ -80,6 +84,11 @@ function StarScene(props) {
     obj.getWorldPosition(pos);
 
     setCurrentName(obj.name);
+
+    //setTargent Example
+    setTargent(pos);
+    orbitControls = orbit_controls.current;
+    //orbitControls.target = pos;
 
     setDivPosition([pos.x, pos.y - 0.05, pos.z]);
     nRef ? (nRef.current.style.opacity = 1) : console.log("no name ref yet");
@@ -143,13 +152,19 @@ function StarScene(props) {
           global={false} // Spin globally or by dragging the model
           cursor={true} // Whether to toggle cursor style on drag
           snap={false} // Snap-back to center (can also be a spring config)
-          speed={0.5} // Speed factor
+          speed={1} // Speed factor
           zoom={1} // Zoom factor when half the polar-max is reached
-          rotation={[0, 0, 0]} // Default rotation
-          azimuth={[-Infinity, Infinity]} // Horizontal limits
-          config={{ mass: 1, tension: 170, friction: 26 }} // Spring config
+          azimuth={[-Infinity, Infinity]}
+
+          // Horizontal limits
         >
-          <OrbitControls minZoom={300} />
+          <OrbitControls
+            ref={orbit_controls}
+            minZoom={300}
+            enableRotate={false}
+            maxZoom={800}
+            target={target}
+          />
           <group ref={group_ref}>
             {data.map((row) => {
               let x = parseFloat(row.x) * SCALE;

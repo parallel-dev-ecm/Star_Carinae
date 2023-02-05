@@ -33,9 +33,7 @@ function StarModal(props) {
         aria-labelledby="example-custom-modal-styling-title"
       >
         <Modal.Header closeButton closeVariant="white">
-          <Modal.Title>
-            <span>#{id}</span>
-          </Modal.Title>
+          <Modal.Title></Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Container>

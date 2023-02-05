@@ -74,15 +74,33 @@ export function Overlay(props) {
                   fluid
                 />
               </Col>
+              <Col className="d-sm-none">
+                <Image
+                  style={{ width: "30%", paddingRight: 0, margin: 0 }}
+                  src={props.imgUrl}
+                  alt=""
+                  fluid
+                />
+              </Col>
             </Row>
 
             <br />
             <Row>
-              <Col md="auto">
+              <Col>
                 <p
-                  className="text-justify d-none  d-sm-flex align-items-start justify-content-start "
+                  className="text-justify d-none  d-md-flex  justify-content-center "
                   style={{ width: "100%" }}
                 >
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad
+                  perspiciatis dolorem quos cumque fugit! Explicabo mollitia
+                  vero, dignissimos commodi quas nam voluptatem sapiente laborum
+                  soluta possimus? Tempora recusandae vero totam.
+                </p>
+              </Col>
+            </Row>
+            <Row className="text-justify text-align-justify">
+              <Col className="text-justify d-sm-none justtify-content-start">
+                <p className="text-justify" style={{ width: "30%" }}>
                   Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad
                   perspiciatis dolorem quos cumque fugit! Explicabo mollitia
                   vero, dignissimos commodi quas nam voluptatem sapiente laborum
