@@ -4,7 +4,7 @@ import { useThree } from "react-three-fiber";
 import { data } from "./coordinateSystem";
 import * as THREE from "three";
 import { OrbitControls } from "@react-three/drei";
-import gsap from "gsap";
+import { gsap } from "gsap";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
@@ -30,8 +30,18 @@ function StarScene(props) {
   // useEffect hook,
   useEffect(() => {
     setControls(orbit_controls.current);
+    console.log(group_ref.current);
+    gsap.fromTo(
+      group_ref.current.scale,
+      { x: 0, y: 0, z: 0 },
+      { x: 1, y: 1, z: 1, delay: 0.5, duration: 1.5 }
+    );
+
+    // child.children[0].length > 0
+    //   ? gsap.fromTo(child.children[0], { scale: 0 }, { scale: 1, delay: 4 })
+    //   : console.log("no child");
     return () => {};
-  });
+  }, []);
 
   renderer.setClearColor(0x0000000);
   camera.position.set(0, 0, 0);
@@ -56,6 +66,8 @@ function StarScene(props) {
     setCurrentName(obj.name);
 
     setDivPosition([pos.x, pos.y - 0.05, pos.z]);
+    console.log(pos);
+    console.log(divPosition);
     nRef ? (nRef.current.style.opacity = 1) : console.log("no name ref yet");
     gsap.to(controls.target, pos);
   };
@@ -147,18 +159,17 @@ function StarScene(props) {
 
           return (
             <>
-              <group name={"starAndName"} position={row_Vector}>
-                <Star
-                  url={"STAR.png"}
-                  scale={0.05}
-                  name={row.Name}
-                  unique_id={
-                    checkIdBelow100(row.Id) ? "10" + row.Id : "1" + row.Id
-                  }
-                  color={row.Color}
-                  starType={row.Star_type}
-                />
-              </group>
+              <Star
+                url={"STAR.png"}
+                position={row_Vector}
+                scale={0.05}
+                name={row.Name}
+                unique_id={
+                  checkIdBelow100(row.Id) ? "10" + row.Id : "1" + row.Id
+                }
+                color={row.Color}
+                starType={row.Star_type}
+              />
 
               {i++}
             </>
