@@ -96,7 +96,7 @@ export function Overlay(props) {
             <Row>
               <Col>
                 <p
-                  className="d-md-flex text-align-justify "
+                  className="d-none d-sm-flex text-align-justify "
                   style={{ width: "100%" }}
                 >
                   Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad
