@@ -46,7 +46,7 @@ export function Overlay(props) {
               </Col>
             </Row>
             <Row>
-              <Col className="d-none d-md-flex">
+              <Col className="d-none d-sm-flex">
                 <h3>
                   <span className="accent">{props.starType}</span>
                 </h3>
@@ -66,7 +66,7 @@ export function Overlay(props) {
             </Row>
 
             <Row>
-              <Col className="d-flex justify-content-center">
+              <Col className="d-none d-sm-flex justify-content-center">
                 <Image
                   style={{ width: "30%", padding: 0, margin: 0 }}
                   src={props.imgUrl}
