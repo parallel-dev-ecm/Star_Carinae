@@ -163,7 +163,6 @@ function StarScene(props) {
             minZoom={300}
             enableRotate={false}
             maxZoom={800}
-            target={target}
           />
           <group ref={group_ref}>
             {data.map((row) => {
