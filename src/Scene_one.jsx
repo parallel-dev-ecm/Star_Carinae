@@ -35,7 +35,7 @@ function StarScene(props) {
     setControls(orbit_controls.current);
 
     return () => {};
-  }, []);
+  }, [orbit_controls]);
 
   renderer.setClearColor(0x0000000);
   camera.position.set(0, 0, 0);
@@ -56,7 +56,11 @@ function StarScene(props) {
     const obj = e.object;
     let pos = new THREE.Vector3();
     obj.getWorldPosition(pos);
+    setCurrentName(obj.name);
+    console.log(obj);
 
+    setDivPosition([pos.x, pos.y - 0.05, pos.z]);
+    nRef ? (nRef.current.style.opacity = 1) : console.log("no name ref yet");
     controls
       ? gsap.to(controls.target, {
           x: pos.x,
@@ -68,25 +72,13 @@ function StarScene(props) {
 
   const onPointerEnter = (e) => {
     const obj = e.object;
-    nRef ? (nRef.current.style.opacity = 1) : console.log("no name ref yet");
-
-    setCurrentName(obj.name);
-
-    console.log(obj);
 
     let pos = new THREE.Vector3();
     obj.getWorldPosition(pos);
-    gsap.to(obj.scale, { x: 0.09, y: 0.09, z: 0.09 });
 
     setDivPosition([pos.x, pos.y - 0.05, pos.z]);
+    nRef ? (nRef.current.style.opacity = 1) : console.log("no name ref yet");
   };
-  // const onPointerLeave = (e) => {
-  //   nRef.current.style.opacity = 0;
-
-  //   const obj = e.object;
-
-  //   gsap.to(obj.scale, { x: 0.05, y: 0.05, z: 0.05 });
-  // };
 
   const handleDoubleClick = (e) => {
     const obj = e.object;
@@ -174,11 +166,7 @@ function StarScene(props) {
 
           return (
             <>
-              <group
-                name={"starAndName"}
-                position={row_Vector}
-                onPointerEnter={onPointerEnter}
-              >
+              <group name={"starAndName"} position={row_Vector}>
                 <Star
                   url={"STAR.png"}
                   scale={0.05}

@@ -28,11 +28,14 @@ function StarModal(props) {
         onExit={handleExit}
         show={show}
         onHide={() => setShow(false)}
+        size="lg"
         dialogClassName="modal-90w"
         aria-labelledby="example-custom-modal-styling-title"
       >
         <Modal.Header closeButton closeVariant="white">
-          <Modal.Title id="Star_Modal_Title">{name}</Modal.Title>
+          <Modal.Title>
+            <span>#{id}</span>
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Container>
@@ -41,6 +44,7 @@ function StarModal(props) {
               starType={starType}
               coords={position}
               imgUrl={url}
+              starId={id}
             />
           </Container>
         </Modal.Body>

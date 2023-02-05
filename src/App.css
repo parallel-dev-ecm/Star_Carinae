@@ -82,11 +82,8 @@ li {
 }
 
 .info {
-  position: relative;
-  z-index: 2;
   color: white;
-  width: 500px;
-  border-left: 1px solid black;
+  width: 800px;
   user-select: none;
 }
 
@@ -106,16 +103,12 @@ li {
 .coord {
   display: inline-block;
   font-family: "Major Mono Display", monospace;
-  background: black;
-  color: white;
+  background: white;
+  color: black;
   padding: 5px 10px;
   border-radius: 5px;
-}
 
-.info h1 {
-  font-family: "Major Mono Display", monospace;
-  font-size: 1em;
-  margin-bottom: 0.5em;
+  font-size: 13px !important;
 }
 
 .info h3 {
@@ -124,13 +117,13 @@ li {
   letter-spacing: -4px;
   line-height: 1em;
   margin: 0;
+  padding: 0;
 }
 
 .info h4 {
   font-weight: 300;
   font-size: 1.15em;
   letter-spacing: -1px;
-  margin: 10px 0;
 }
 
 @keyframes fade-in {

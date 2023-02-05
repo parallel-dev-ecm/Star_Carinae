@@ -41,24 +41,34 @@ export function Overlay(props) {
     <>
       <div className="info">
         <List open={state.open}>
-          <h3>{props.name}</h3>
-          <h3>
-            <span className="accent">{props.starType}</span>
-          </h3>
-          <Container>
-            <div className=" modalStarDiv">
+          <Container className="d-flex flex-column ">
+            <h3>{props.name}</h3>
+            <h3>
+              <span className="accent">{props.starType}</span>
+            </h3>
+            <br />
+            <div class="d-flex justify-content-evenly">
+              <p className="coord">x: {pos.x}</p>
+              <p className="coord">y: {pos.y}</p>
+              <p className="coord">z: {pos.z}</p>
+            </div>
+            <div className="d-flex justify-content-center">
               <img
-                style={{ width: "53%", height: "30vh" }}
+                style={{
+                  width: "45%",
+                  height: "40vh",
+                }}
                 src={props.imgUrl}
                 alt=""
               />
             </div>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad
+              perspiciatis dolorem quos cumque fugit! Explicabo mollitia vero,
+              dignissimos commodi quas nam voluptatem sapiente laborum soluta
+              possimus? Tempora recusandae vero totam.
+            </p>
           </Container>
-
-          <div className="flex">
-            <p className="coord">{pos.x}</p>
-            <p className="coord">{pos.y}</p>
-          </div>
         </List>
       </div>
     </>
