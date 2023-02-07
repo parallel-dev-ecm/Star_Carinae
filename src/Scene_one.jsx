@@ -1,9 +1,4 @@
-import {
-  useTexture,
-  useGLTF,
-  Html,
-  PresentationControls,
-} from "@react-three/drei";
+import { useTexture, Html, PresentationControls } from "@react-three/drei";
 import React, { useEffect, useRef } from "react";
 import { useThree } from "react-three-fiber";
 import { data } from "./coordinateSystem";
@@ -12,35 +7,37 @@ import { OrbitControls } from "@react-three/drei";
 import { gsap } from "gsap";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useStore } from "./store";
 
 function StarScene(props) {
   // CONST AND VARIABLES DEFINITION
+  const store = useStore();
+  let newId = 1000;
+  useEffect(() => {
+    console.log(store.starSearch);
+  }, [store]);
+
   const history = useNavigate();
   const nRef = useRef();
   const group_ref = useRef();
   const orbit_controls = useRef();
-  let orbitControls;
 
   const target_vector = new THREE.Vector3();
 
-  const [target, setTargent] = useState([0, 0, 0]);
-
-  const [controls, setControls] = useState();
   const [currentName, setCurrentName] = useState();
   const [divPosition, setDivPosition] = useState(new THREE.Vector3());
 
   const SCALE = 150;
   let i = 1000;
   const state = useThree();
+
   const camera = state.camera;
+  const scene = state.scene;
 
   const renderer = state.gl;
 
   // useEffect hook,
   useEffect(() => {
-    setControls(orbit_controls.current);
-    console.log(group_ref.current);
-
     const ctx = gsap.context(() => {
       const groupScaleInitialAnimation = gsap.fromTo(
         group_ref.current.scale,
@@ -84,10 +81,8 @@ function StarScene(props) {
     obj.getWorldPosition(pos);
 
     setCurrentName(obj.name);
+    console.log(obj);
 
-    //setTargent Example
-    setTargent(pos);
-    orbitControls = orbit_controls.current;
     //orbitControls.target = pos;
 
     setDivPosition([pos.x, pos.y - 0.05, pos.z]);
@@ -112,7 +107,6 @@ function StarScene(props) {
   };
 
   const handleExit = (e) => {
-    console.log(nRef.current);
     nRef.current.style.opacity = 0;
   };
 
@@ -145,58 +139,53 @@ function StarScene(props) {
 
   return (
     <>
-      {target_vector ? (
-        <PresentationControls
-          domElement={orbit_controls}
-          enabled={true} // the controls can be disabled by setting this to false
-          global={false} // Spin globally or by dragging the model
-          cursor={true} // Whether to toggle cursor style on drag
-          snap={false} // Snap-back to center (can also be a spring config)
-          speed={1} // Speed factor
-          zoom={1} // Zoom factor when half the polar-max is reached
-          azimuth={[-Infinity, Infinity]}
+      <PresentationControls
+        domElement={orbit_controls}
+        enabled={true} // the controls can be disabled by setting this to false
+        global={false} // Spin globally or by dragging the model
+        cursor={true} // Whether to toggle cursor style on drag
+        snap={false} // Snap-back to center (can also be a spring config)
+        speed={1} // Speed factor
+        zoom={1} // Zoom factor when half the polar-max is reached
+        azimuth={[-Infinity, Infinity]}
 
-          // Horizontal limits
-        >
-          <OrbitControls
-            ref={orbit_controls}
-            minZoom={300}
-            enableRotate={false}
-            maxZoom={800}
-          />
-          <group ref={group_ref}>
-            {data.map((row) => {
-              let x = parseFloat(row.x) * SCALE;
-              let y = parseFloat(row.y) * SCALE;
-              let z = parseFloat(row.z) * SCALE;
+        // Horizontal limits
+      >
+        <OrbitControls
+          ref={orbit_controls}
+          minZoom={300}
+          enableRotate={false}
+          maxZoom={800}
+        />
 
-              const row_Vector = new THREE.Vector3(x, y, z);
-              row_Vector.normalize();
-              row_Vector.multiplyScalar(2);
+        <group ref={group_ref}>
+          {data.map((row) => {
+            let x = parseFloat(row.x) * SCALE;
+            let y = parseFloat(row.y) * SCALE;
+            let z = parseFloat(row.z) * SCALE;
 
-              return (
-                <>
-                  <Star
-                    url={"STAR.png"}
-                    position={row_Vector}
-                    scale={0.05}
-                    name={row.Name}
-                    unique_id={
-                      checkIdBelow100(row.Id) ? "10" + row.Id : "1" + row.Id
-                    }
-                    color={row.Color}
-                    starType={row.Star_type}
-                  />
+            const row_Vector = new THREE.Vector3(x, y, z);
+            newId = checkIdBelow100(row.Id) ? "10" + row.Id : "1" + row.Id;
+            console.log(newId);
 
-                  {i++}
-                </>
-              );
-            })}
-          </group>
-        </PresentationControls>
-      ) : (
-        console.log("no_target")
-      )}
+            return (
+              <>
+                <Star
+                  url={`star.png`}
+                  position={row_Vector}
+                  scale={0.05}
+                  name={row.Name}
+                  unique_id={newId}
+                  color={row.Color}
+                  starType={row.Star_type}
+                />
+
+                {i++}
+              </>
+            );
+          })}
+        </group>
+      </PresentationControls>
 
       {/* HTML DIV STAR NAME CREATION */}
       <Html scale={0.005} position={divPosition}>
@@ -215,7 +204,6 @@ function StarScene(props) {
           {currentName}
         </p>
       </Html>
-
       {/* STAR CREATION mapping coordinateSystem values */}
     </>
   );

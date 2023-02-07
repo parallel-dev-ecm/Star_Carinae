@@ -40,6 +40,10 @@
 * {
   background-color: black;
 }
+
+body {
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+}
 .close-icon-white .close {
   color: white;
 }
