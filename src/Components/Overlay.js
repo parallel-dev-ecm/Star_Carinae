@@ -41,8 +41,11 @@ export function Overlay(props) {
         <List open={open}>
           <Container className="d-flex flex-column ">
             <Row>
-              <Col>
+              <Col className="d-none d-sm-flex">
                 <h3>{props.name}</h3>
+              </Col>
+              <Col className="d-sm-none">
+                <h3 style={{ width: "10%" }}>{props.name}</h3>
               </Col>
             </Row>
             <Row>

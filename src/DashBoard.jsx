@@ -2,12 +2,9 @@ import React, { Suspense } from "react";
 import { Canvas } from "react-three-fiber";
 import StarScene from "./Scene_one";
 
-import Main_navbar from "./Components/Main_navbar";
-
 function DashBoard() {
   return (
     <>
-      <Main_navbar />
       <div className="three_scene">
         <Canvas
           orthographic

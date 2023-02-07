@@ -12,7 +12,7 @@ import { useStore } from "./store";
 function StarScene(props) {
   // CONST AND VARIABLES DEFINITION
   const store = useStore();
-  let newId = 1000;
+
   useEffect(() => {
     console.log(store.starSearch);
   }, [store]);
@@ -21,18 +21,12 @@ function StarScene(props) {
   const nRef = useRef();
   const group_ref = useRef();
   const orbit_controls = useRef();
-
-  const target_vector = new THREE.Vector3();
-
   const [currentName, setCurrentName] = useState();
   const [divPosition, setDivPosition] = useState(new THREE.Vector3());
 
   const SCALE = 150;
   let i = 1000;
   const state = useThree();
-
-  const camera = state.camera;
-  const scene = state.scene;
 
   const renderer = state.gl;
 
@@ -53,27 +47,12 @@ function StarScene(props) {
       );
     }, group_ref);
 
-    // child.children[0].length > 0
-    //   ? gsap.fromTo(child.children[0], { scale: 0 }, { scale: 1, delay: 4 })
-    //   : console.log("no child");
     return () => {
       ctx.revert();
     };
   }, []);
 
   renderer.setClearColor(0x0000000);
-
-  function BG_scene() {
-    const bg_texture = useTexture("bg.jpeg");
-    return (
-      <>
-        <mesh>
-          <sphereGeometry args={[100, 32, 16]} />
-          <meshBasicMaterial map={bg_texture} side={THREE.BackSide} />
-        </mesh>
-      </>
-    );
-  }
 
   const handleClick = (e) => {
     const obj = e.object;
@@ -126,7 +105,7 @@ function StarScene(props) {
             starType: props.starType,
           }}
         >
-          <spriteMaterial map={texture} side={THREE.DoubleSide} />
+          <spriteMaterial map={texture} />
         </sprite>
       </>
     );
@@ -142,14 +121,11 @@ function StarScene(props) {
       <PresentationControls
         domElement={orbit_controls}
         enabled={true} // the controls can be disabled by setting this to false
-        global={false} // Spin globally or by dragging the model
+        global={true} // Spin globally or by dragging the model
         cursor={true} // Whether to toggle cursor style on drag
-        snap={false} // Snap-back to center (can also be a spring config)
         speed={1} // Speed factor
         zoom={1} // Zoom factor when half the polar-max is reached
-        azimuth={[-Infinity, Infinity]}
-
-        // Horizontal limits
+        azimuth={[-Infinity, Infinity]} // Horizontal limits
       >
         <OrbitControls
           ref={orbit_controls}
@@ -160,22 +136,26 @@ function StarScene(props) {
 
         <group ref={group_ref}>
           {data.map((row) => {
+            const url = `star.png`;
+
             let x = parseFloat(row.x) * SCALE;
             let y = parseFloat(row.y) * SCALE;
             let z = parseFloat(row.z) * SCALE;
 
             const row_Vector = new THREE.Vector3(x, y, z);
-            newId = checkIdBelow100(row.Id) ? "10" + row.Id : "1" + row.Id;
-            console.log(newId);
+            row_Vector.normalize();
+            row_Vector.multiplyScalar(2);
 
             return (
               <>
                 <Star
-                  url={`star.png`}
+                  url={url}
                   position={row_Vector}
-                  scale={0.05}
+                  scale={0.04}
                   name={row.Name}
-                  unique_id={newId}
+                  unique_id={
+                    checkIdBelow100(row.Id) ? "10" + row.Id : "1" + row.Id
+                  }
                   color={row.Color}
                   starType={row.Star_type}
                 />
@@ -193,7 +173,7 @@ function StarScene(props) {
           ref={nRef}
           style={{
             color: "white",
-            fontSize: "1em",
+            fontSize: "0.6em",
             width: "0",
             height: "0",
             lineHeight: " 1.25em",
