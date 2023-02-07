@@ -1,18 +1,49 @@
-import React, { useRef } from "react";
+import React from "react";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { useStore } from "../store";
-import Form from "react-bootstrap/Form";
+import { ReactSearchAutocomplete } from "react-search-autocomplete";
+import { data } from "../coordinateSystem";
+import * as THREE from "three";
 
 function Main_navbar() {
-  const store = useStore();
-  const searchTextRef = useRef();
+  const SCALE = 150;
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const query = searchTextRef.current.value;
-    store.starSearch = query;
+  const item = data;
+  const store = useStore();
+
+  const handleOnSearch = (string, results) => {
+    // onSearch will have as the first callback parameter
+    // the string searched and for the second the results.
+    console.log(string, results);
+  };
+
+  const handleOnHover = (result) => {
+    // the item hovered
+    console.log(result);
+  };
+
+  const handleOnSelect = (item) => {
+    const newControlsTarget = new THREE.Vector3(
+      item.x * SCALE,
+      item.y * SCALE,
+      item.z * SCALE
+    );
+    store.controlsTarget = newControlsTarget;
+  };
+
+  const handleOnFocus = () => {
+    console.log("Focused");
+  };
+  const formatResult = (item) => {
+    return (
+      <>
+        <span style={{ display: "block", textAlign: "left" }}>
+          Name: {item.Name}
+        </span>
+      </>
+    );
   };
 
   return (
@@ -30,21 +61,24 @@ function Main_navbar() {
               }}
             />
           </Navbar.Brand>
-          <Nav className="me-auto">
-            <Form
-              className=""
-              onSubmit={handleSubmit}
-              style={{ width: "200px", opacity: "0.6" }}
-            >
-              <Form.Control
-                ref={searchTextRef}
-                style={{ color: "white", backgroundColor: "black" }}
-                placeholder="Search galaxy"
-                className="me-5"
-                aria-label="Search"
-              />
-            </Form>
-          </Nav>
+          <Nav className="me-auto"></Nav>
+
+          <div style={{ width: 400, backgroundColor: "black" }}>
+            <ReactSearchAutocomplete
+              on
+              styling={{ border: 0, color: "white", backgroundColor: "black" }}
+              items={item}
+              key={"Id"}
+              resultStringKeyName="Name" // String to display in the results
+              fuseOptions={{ keys: ["Name"] }} // Search on both fields
+              onSearch={handleOnSearch}
+              onHover={handleOnHover}
+              onSelect={handleOnSelect}
+              onFocus={handleOnFocus}
+              autoFocus
+              formatResult={formatResult}
+            />
+          </div>
         </Container>
       </Navbar>
     </>

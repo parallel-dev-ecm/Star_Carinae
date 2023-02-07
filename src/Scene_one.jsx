@@ -13,10 +13,6 @@ function StarScene(props) {
   // CONST AND VARIABLES DEFINITION
   const store = useStore();
 
-  useEffect(() => {
-    console.log(store.starSearch);
-  }, [store]);
-
   const history = useNavigate();
   const nRef = useRef();
   const group_ref = useRef();
@@ -27,10 +23,11 @@ function StarScene(props) {
   const SCALE = 150;
   let i = 1000;
   const state = useThree();
+  const scene = state.scene;
 
   const renderer = state.gl;
 
-  // useEffect hook,
+  // ANIMATIONS USE EFFECT HOOK
   useEffect(() => {
     const ctx = gsap.context(() => {
       const groupScaleInitialAnimation = gsap.fromTo(
@@ -132,6 +129,7 @@ function StarScene(props) {
           minZoom={300}
           enableRotate={false}
           maxZoom={800}
+          target={store.controlsTarget}
         />
 
         <group ref={group_ref}>
