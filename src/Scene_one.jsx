@@ -1,9 +1,8 @@
-import { useTexture, Html, Polyhedron } from "@react-three/drei";
+import { useTexture, Html } from "@react-three/drei";
 import React, { useEffect, useRef } from "react";
 import { useThree } from "react-three-fiber";
 import { data } from "./coordinateSystem";
 import * as THREE from "three";
-import { OrbitControls } from "@react-three/drei";
 import { gsap } from "gsap";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";

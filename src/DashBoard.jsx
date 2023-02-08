@@ -1,6 +1,5 @@
 import { OrbitControls } from "@react-three/drei";
-import React, { Suspense, useEffect } from "react";
-import { useRef } from "react";
+import React, { Suspense } from "react";
 import { Canvas } from "react-three-fiber";
 import StarScene from "./Scene_one";
 import { useStore } from "./store";

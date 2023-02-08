@@ -27,7 +27,7 @@ function StarModal(props) {
         dialogClassName="modal-90w"
         aria-labelledby="example-custom-modal-styling-title"
       >
-        <Modal.Header closeButton closeVariant="white">
+        <Modal.Header closeButton closeVariant="dark">
           <Modal.Title>
             <Container>
               <span>#{id - 1000}</span>
