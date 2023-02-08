@@ -1,4 +1,4 @@
-import { useTexture, Html, PresentationControls } from "@react-three/drei";
+import { useTexture, Html, Polyhedron } from "@react-three/drei";
 import React, { useEffect, useRef } from "react";
 import { useThree } from "react-three-fiber";
 import { data } from "./coordinateSystem";
@@ -16,19 +16,16 @@ function StarScene(props) {
   const history = useNavigate();
   const nRef = useRef();
   const group_ref = useRef();
-  const orbit_controls = useRef();
   const [currentName, setCurrentName] = useState();
   const [divPosition, setDivPosition] = useState(new THREE.Vector3());
 
-  const SCALE = 150;
+  const SCALE = 400;
   let i = 1000;
   const state = useThree();
   const scene = state.scene;
-  store.scene = scene;
-  store.controls = orbit_controls.current;
   const renderer = state.gl;
 
-  // ANIMATIONS USE EFFECT HOOK
+  //ANIMATIONS USE EFFECT HOOK
   useEffect(() => {
     const ctx = gsap.context(() => {
       const groupScaleInitialAnimation = gsap.fromTo(
@@ -59,7 +56,6 @@ function StarScene(props) {
 
     setCurrentName(obj.name);
     console.log(obj);
-
     //orbitControls.target = pos;
 
     setDivPosition([pos.x, pos.y - 0.05, pos.z]);
@@ -116,55 +112,37 @@ function StarScene(props) {
 
   return (
     <>
-      <PresentationControls
-        enabled={true} // the controls can be disabled by setting this to false
-        global={true} // Spin globally or by dragging the model
-        cursor={true} // Whether to toggle cursor style on drag
-        speed={1} // Speed factor
-        zoom={1}
-        azimuth={[-Infinity, Infinity]}
-        // Horizontal limits
-      >
-        <OrbitControls
-          ref={orbit_controls}
-          minZoom={300}
-          enableRotate={false}
-          maxZoom={800}
-          target={store.controlsTarget}
-        />
+      <group ref={group_ref}>
+        {data.map((row) => {
+          const url = `star.png`;
 
-        <group ref={group_ref}>
-          {data.map((row) => {
-            const url = `star.png`;
+          let x = parseFloat(row.x) * SCALE;
+          let y = parseFloat(row.y) * SCALE;
+          let z = parseFloat(row.z) * SCALE;
 
-            let x = parseFloat(row.x) * SCALE;
-            let y = parseFloat(row.y) * SCALE;
-            let z = parseFloat(row.z) * SCALE;
+          const row_Vector = new THREE.Vector3(x, y, z);
+          // row_Vector.normalize();
+          // row_Vector.multiplyScalar(2);
 
-            const row_Vector = new THREE.Vector3(x, y, z);
-            // row_Vector.normalize();
-            // row_Vector.multiplyScalar(2);
+          return (
+            <>
+              <Star
+                url={url}
+                position={row_Vector}
+                scale={0.04}
+                name={row.Name}
+                unique_id={
+                  checkIdBelow100(row.Id) ? "10" + row.Id : "1" + row.Id
+                }
+                color={row.Color}
+                starType={row.Star_type}
+              />
 
-            return (
-              <>
-                <Star
-                  url={url}
-                  position={row_Vector}
-                  scale={0.04}
-                  name={row.Name}
-                  unique_id={
-                    checkIdBelow100(row.Id) ? "10" + row.Id : "1" + row.Id
-                  }
-                  color={row.Color}
-                  starType={row.Star_type}
-                />
-
-                {i++}
-              </>
-            );
-          })}
-        </group>
-      </PresentationControls>
+              {i++}
+            </>
+          );
+        })}
+      </group>
 
       {/* HTML DIV STAR NAME CREATION */}
       <Html scale={0.005} position={divPosition}>

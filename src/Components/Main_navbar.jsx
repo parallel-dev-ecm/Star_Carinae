@@ -6,14 +6,13 @@ import { useStore } from "../store";
 import { ReactSearchAutocomplete } from "react-search-autocomplete";
 import { data } from "../coordinateSystem";
 import * as THREE from "three";
-import { useSnapshot } from "valtio";
 
 function Main_navbar() {
-  const SCALE = 150;
+  const SCALE = 400;
 
   const item = data;
   const store = useStore();
- 
+
   const handleOnSearch = (string, results) => {
     // onSearch will have as the first callback parameter
     // the string searched and for the second the results.
@@ -70,7 +69,7 @@ function Main_navbar() {
               styling={{ border: 0, color: "white", backgroundColor: "black" }}
               items={item}
               key={"Id"}
-              resultStringKeyName="Name" // String to display in the results
+              resultStringKeyName={"Name"} // String to display in the results
               fuseOptions={{ keys: ["Name"] }} // Search on both fields
               onSearch={handleOnSearch}
               onHover={handleOnHover}

@@ -1,21 +1,19 @@
-import React, { Suspense } from "react";
+import { OrbitControls } from "@react-three/drei";
+import React, { Suspense, useEffect } from "react";
 import { useRef } from "react";
 import { Canvas } from "react-three-fiber";
 import StarScene from "./Scene_one";
 import { useStore } from "./store";
 
 function DashBoard() {
-  const orbit_controls = useRef();
-
   const store = useStore();
+
   return (
     <>
       <div className="three_scene">
-        <Canvas
-          orthographic
-          camera={{ zoom: 300, near: 0, far: 1000, position: [0, 0, 0] }}
-        >
-          
+        <Canvas>
+          <OrbitControls target={store.controlsTarget} zoomSpeed={0.5} />
+
           <ambientLight intensity={0.5} />
           <Suspense>
             <StarScene />
