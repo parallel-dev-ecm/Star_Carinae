@@ -6,13 +6,14 @@ import { useStore } from "../store";
 import { ReactSearchAutocomplete } from "react-search-autocomplete";
 import { data } from "../coordinateSystem";
 import * as THREE from "three";
+import { useSnapshot } from "valtio";
 
 function Main_navbar() {
   const SCALE = 150;
 
   const item = data;
   const store = useStore();
-
+ 
   const handleOnSearch = (string, results) => {
     // onSearch will have as the first callback parameter
     // the string searched and for the second the results.

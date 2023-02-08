@@ -24,7 +24,8 @@ function StarScene(props) {
   let i = 1000;
   const state = useThree();
   const scene = state.scene;
-
+  store.scene = scene;
+  store.controls = orbit_controls.current;
   const renderer = state.gl;
 
   // ANIMATIONS USE EFFECT HOOK
@@ -116,13 +117,13 @@ function StarScene(props) {
   return (
     <>
       <PresentationControls
-        domElement={orbit_controls}
         enabled={true} // the controls can be disabled by setting this to false
         global={true} // Spin globally or by dragging the model
         cursor={true} // Whether to toggle cursor style on drag
         speed={1} // Speed factor
-        zoom={1} // Zoom factor when half the polar-max is reached
-        azimuth={[-Infinity, Infinity]} // Horizontal limits
+        zoom={1}
+        azimuth={[-Infinity, Infinity]}
+        // Horizontal limits
       >
         <OrbitControls
           ref={orbit_controls}
@@ -141,8 +142,8 @@ function StarScene(props) {
             let z = parseFloat(row.z) * SCALE;
 
             const row_Vector = new THREE.Vector3(x, y, z);
-            row_Vector.normalize();
-            row_Vector.multiplyScalar(2);
+            // row_Vector.normalize();
+            // row_Vector.multiplyScalar(2);
 
             return (
               <>
