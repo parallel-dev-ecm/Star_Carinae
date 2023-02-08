@@ -12,7 +12,11 @@ function DashBoard() {
     <>
       <div className="three_scene">
         <Canvas>
-          <OrbitControls target={store.controlsTarget} zoomSpeed={0.5} />
+          <OrbitControls
+            enablePan={false}
+            target={store.controlsTarget}
+            zoomSpeed={0.5}
+          />
 
           <ambientLight intensity={0.5} />
           <Suspense>
